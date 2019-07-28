@@ -1,0 +1,12 @@
+name: StockMarket
+version: 0.3.2
+author: CrashGamesCrMc
+main: io.github.crashgamescrmc.StockMarket.StockMarketPlugin
+description: A minecraft plugin that adds a stock market.
+depend: [Vault]
+
+commands:
+  sm:
+    aliases: []
+    description: The base stock market command.
+    usage: /sm
