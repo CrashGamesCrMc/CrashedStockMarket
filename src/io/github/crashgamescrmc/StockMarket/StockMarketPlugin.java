@@ -24,7 +24,7 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static final String config_file_path = "stocks.json";
 
 	public static final String version = "0.3.3";
-	public static final long build = 1;
+	public static final long build = 2;
 
 	@SuppressWarnings("unchecked")
 	@Override
