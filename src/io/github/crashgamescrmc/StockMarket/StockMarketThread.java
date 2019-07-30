@@ -20,6 +20,12 @@ public class StockMarketThread implements Runnable {
 
 	private Random random;
 
+	public static final int RUNNING = 0;
+	public static final int STOP = 1;
+	public static final int RESTART = 2;
+
+	public static int state = RUNNING;
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
@@ -31,6 +37,14 @@ public class StockMarketThread implements Runnable {
 		long start;
 		long end;
 		while (true) {
+			if (state == RUNNING) {
+			} else if (state == STOP) {
+				plugin.getLogger().info("Stopped stock market movement thread!");
+				break;
+			} else if (state == RESTART) {
+				new Thread(new StockMarketThread(plugin, random));
+				break;
+			}
 			start = System.currentTimeMillis();
 			for (int i = 0; i < shares.size(); i++) {
 				share = (JSONObject) shares.values().toArray()[i];

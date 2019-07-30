@@ -88,7 +88,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		System.out.print("Processing");
-		
+
 		if (cmd.getName().equalsIgnoreCase("sm")) {
 			if (args.length >= 1) {
 				if (args[0].equalsIgnoreCase("config")) {
@@ -510,6 +510,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 						return true;
 					}
 					StockMarketPlugin.parseConfig();
+					StockMarketThread.state = StockMarketThread.RESTART;
 					sender.sendMessage(prefix + "Reloaded Stock Market!");
 				} else {
 					sender.sendMessage(error_subcommand_not_found);

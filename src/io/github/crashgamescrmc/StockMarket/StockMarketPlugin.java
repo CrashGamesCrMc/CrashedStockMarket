@@ -23,7 +23,7 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static JSONObject config;
 	public static final String config_file_path = "stocks.json";
 
-	public static final String version = "0.3.2";
+	public static final String version = "0.3.3";
 	public static final long build = 1;
 
 	@SuppressWarnings("unchecked")
@@ -160,7 +160,7 @@ public class StockMarketPlugin extends JavaPlugin {
 		new StockMarketCommandExecutor(this);
 		new Thread(new StockMarketThread(this, new Random())).start();
 
-		System.out.println("Enabled StockMarket!");
+		getLogger().info("Enabled StockMarket!");
 
 		saveConfigFile();
 	}
