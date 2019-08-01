@@ -358,9 +358,9 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 								try {
 									amount = Integer.parseInt(args[3]);
 								} catch (NumberFormatException e) {
-									sender.sendMessage(
-											prefix + "§4Error while executing command! The given amount was not a number. Exception: "
-													+ e.getMessage());
+									sender.sendMessage(prefix
+											+ "§4Error while executing command! The given amount was not a number. Exception: "
+											+ e.getMessage());
 									return true;
 								}
 							}
@@ -412,7 +412,10 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 
 								sender.sendMessage(prefix + "" + share_name + " - Buy price: "
 										+ (double) user_share.get("buy_price") + " - Price: "
-										+ (double) share.get("price") + " - Amount: " + user_share.get("amount"));
+										+ (double) share.get("price") + " - Amount: " + user_share.get("amount")
+										+ " - Change: "
+										+ ((double) share.get("price") / (double) user_share.get("buy_price") * 100
+												+ "%"));
 							}
 						}
 					} else {

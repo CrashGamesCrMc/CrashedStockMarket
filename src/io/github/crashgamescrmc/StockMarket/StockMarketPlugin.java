@@ -23,8 +23,8 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static JSONObject config;
 	public static final String config_file_path = "stocks.json";
 
-	public static final String version = "0.3.3";
-	public static final long build = 2;
+	public static final String version = "0.3.4";
+	public static final long build = 1;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -56,6 +56,7 @@ public class StockMarketPlugin extends JavaPlugin {
 															// (10*change+base)
 				settings.put("min_base_distance", -10.0);
 				settings.put("bankruptcy_from_base", 0.5);
+				settings.put("round", 4);
 
 				master.put("settings", settings);
 
@@ -65,10 +66,9 @@ public class StockMarketPlugin extends JavaPlugin {
 
 				/*
 				 * JSONObject Apple = new JSONObject(); Apple.put("name",
-				 * "Apple Computer Inc."); Apple.put("base", 165.0);
-				 * Apple.put("change", 0.03); Apple.put("current_base", 165.0);
-				 * Apple.put("current_change", 0.03); Apple.put("price",
-				 * Apple.get("base")); Apple.put("event_chance", 0.05);
+				 * "Apple Computer Inc."); Apple.put("base", 165.0); Apple.put("change", 0.03);
+				 * Apple.put("current_base", 165.0); Apple.put("current_change", 0.03);
+				 * Apple.put("price", Apple.get("base")); Apple.put("event_chance", 0.05);
 				 * Apple.put("movement",0.0); Apple.put("movement_end", 0L);
 				 * Apple.put("movement_duration", 0L);
 				 * 
@@ -144,6 +144,10 @@ public class StockMarketPlugin extends JavaPlugin {
 			if (Utils.isSmaller(getConfigVersion(), getConfigBuild(), "0.3.1", 1)) {
 				getLogger().info("§e§lAdapting config from prior to 0.3.1!");
 				settings.put("bankruptcy_from_base", 0.5);
+			}
+			if (Utils.isSmaller(getConfigVersion(), getConfigBuild(), "0.3.4", 1)) {
+				getLogger().info("§e§lAdapting config from prior to 0.3.4!");
+				settings.put("rounding", 4);
 			}
 
 			getSettings().put("version", version);
