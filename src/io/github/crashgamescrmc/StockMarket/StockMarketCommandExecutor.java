@@ -414,8 +414,8 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 										+ (double) user_share.get("buy_price") + " - Price: "
 										+ (double) share.get("price") + " - Amount: " + user_share.get("amount")
 										+ " - Change: "
-										+ ((double) share.get("price") / (double) user_share.get("buy_price") * 100
-												+ "%"));
+										+ (((double) share.get("price") / (double) user_share.get("buy_price") - 1)
+												* 100 + "%"));
 							}
 						}
 					} else {
