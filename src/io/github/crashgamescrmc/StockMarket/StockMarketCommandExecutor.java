@@ -83,6 +83,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 	public static final String[] permission_config_share_show = new String[] { "StockMarket.*", "StockMarket.config.*",
 			"StockMarket.config.share.*", "StockMarket.config.share.show" };
 	public static final String[] permission_reload = new String[] { "StockMarket.*", "StockMarket.reload" };
+	public static final String[] permission_version = new String[] { "StockMarket.version", "StockMarket.*" };
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
@@ -515,6 +516,10 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 					StockMarketPlugin.parseConfig();
 					StockMarketThread.state = StockMarketThread.RESTART;
 					sender.sendMessage(prefix + "Reloaded Stock Market!");
+				} else if (args[0].equalsIgnoreCase("version")) {
+					if (!hasPermission(sender, permission_version)) {
+
+					}
 				} else {
 					sender.sendMessage(error_subcommand_not_found);
 				}
@@ -545,6 +550,12 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 				}
 				if (hasPermission(sender, permission_sell)) {
 					sender.sendMessage(prefix + "/sm sell -> shows help for subcommands");
+				}
+				if (!hasPermission(sender, permission_reload)) {
+					sender.sendMessage(prefix + "/sm reload -> reloads the plugins config file");
+				}
+				if (!hasPermission(sender, permission_version)) {
+					sender.sendMessage(prefix + "/sm version -> shows the plugin's version");
 				}
 			}
 			return true;

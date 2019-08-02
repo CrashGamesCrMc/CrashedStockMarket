@@ -24,7 +24,7 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static final String config_file_path = "stocks.json";
 
 	public static final String version = "0.3.4";
-	public static final long build = 1;
+	public static final long build = 2;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -360,7 +360,7 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static void addShareToUser(String ID, String username) {
 		JSONObject share = new JSONObject();
 		share.put("buy_price", -1.0);
-		share.put("amount", 0);
+		share.put("amount", 0L);
 		((JSONObject) ((JSONObject) ((JSONObject) ((JSONObject) config.get("users")).get(username)).get("market"))
 				.get("shares")).put(ID, share);
 	}
