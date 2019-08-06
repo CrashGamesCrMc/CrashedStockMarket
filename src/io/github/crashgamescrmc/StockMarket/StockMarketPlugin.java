@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -21,10 +22,13 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static Economy economy;
 	public static StockMarketPlugin plugin;
 	public static JSONObject config;
-	public static final String config_file_path = "stocks.json";
+	public static final String config_file_path = "plugins/StockMarket/config.json";
+	public static final String config_dir = "plugins/StockMarket";
 
-	public static final String version = "0.3.4";
-	public static final long build = 2;
+	public static final String version = "0.4.0";
+	public static final long build = 1;
+
+	public StockMarketThread stockMarketThread;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -54,7 +58,6 @@ public class StockMarketPlugin extends JavaPlugin {
 				settings.put("max_base_distance", 10.0); // max value from base
 															// price
 															// (10*change+base)
-				settings.put("min_base_distance", -10.0);
 				settings.put("bankruptcy_from_base", 0.5);
 				settings.put("round", 4);
 
@@ -102,12 +105,29 @@ public class StockMarketPlugin extends JavaPlugin {
 
 				getLogger().info(master.toJSONString());
 
-				// file logic
+				// dir logic
 
-				FileWriter fw = new FileWriter(config_file_path);
-				fw.write(master.toJSONString());
-				fw.flush();
-				fw.close();
+				if (!config_dir.equals("")) {
+					new File(config_dir).mkdirs();
+					if (new File("stocks.json").exists()) {
+						FileReader fr = new FileReader("stocks.json");
+						JSONParser parser = new JSONParser();
+
+						try {
+							config = (JSONObject) parser.parse(fr);
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					} else {
+						// file logic
+
+						FileWriter fw = new FileWriter(config_file_path);
+						fw.write(master.toJSONString());
+						fw.flush();
+						fw.close();
+					}
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -162,7 +182,8 @@ public class StockMarketPlugin extends JavaPlugin {
 		}
 
 		new StockMarketCommandExecutor(this);
-		new Thread(new StockMarketThread(this, new Random())).start();
+		stockMarketThread = new StockMarketThread(this, new Random());
+		new Thread(stockMarketThread).start();
 
 		getLogger().info("Enabled StockMarket!");
 
@@ -206,8 +227,6 @@ public class StockMarketPlugin extends JavaPlugin {
 				addGenericShareMovements();
 
 				getSettings().put("max_base_distance", 10.0);
-
-				getSettings().put("min_base_distance", -10.0);
 
 				settings.put("random_movement_max_time", 48 * 60);
 				settings.put("random_movement_min_time", 3);
@@ -322,10 +341,6 @@ public class StockMarketPlugin extends JavaPlugin {
 
 	public static long getConfigBuild() {
 		return (long) getSettings().get("build");
-	}
-
-	public static double getMinBaseDistance() {
-		return (double) getSettings().get("min_base_distance");
 	}
 
 	public static double getMaxBaseDistance() {

@@ -22,13 +22,14 @@ public class StockMarketThread implements Runnable {
 
 	public static final int RUNNING = 0;
 	public static final int STOP = 1;
-	public static final int RESTART = 2;
 
-	public static int state = RUNNING;
+	public int state = RUNNING;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
+
+		plugin.getLogger().info("New Stock Market Thread starting!");
 		JSONObject shares = StockMarketPlugin.getShares();
 		JSONObject share;
 		double movement;
@@ -37,14 +38,13 @@ public class StockMarketThread implements Runnable {
 		long start;
 		long end;
 		while (true) {
+
 			if (state == RUNNING) {
 			} else if (state == STOP) {
 				plugin.getLogger().info("Stopped stock market movement thread!");
 				break;
-			} else if (state == RESTART) {
-				new Thread(new StockMarketThread(plugin, random));
-				break;
 			}
+
 			start = System.currentTimeMillis();
 			for (int i = 0; i < shares.size(); i++) {
 				share = (JSONObject) shares.values().toArray()[i];
@@ -55,30 +55,25 @@ public class StockMarketThread implements Runnable {
 
 				if (movement_end < System.currentTimeMillis()) {
 
-					double price_dif = (double) share.get("price") - (double) share.get("current_base");
+					double price_dif = ((double) share.get("price") - (double) share.get("current_base"))
+							/ (double) share.get("current_base");
 					// share has no movement
 					movement_duration = (long) (1000 * 60 * GetRandom(StockMarketPlugin.getRandomMovementMinTime(),
 							StockMarketPlugin.getRandomMovementMaxTime()));
 					movement_end = (long) (System.currentTimeMillis() + movement_duration);
 
 					/*
-					 * movement =
-					 * GetRandom(StockMarketPlugin.getRandomMovementMin(),
-					 * StockMarketPlugin.getRandomMovementMin()) GetRandom( 1 +
-					 * price_dif / StockMarketPlugin.getMinBaseDistance()
-					 * (double) share.get("current_change"), 1 - price_dif /
-					 * StockMarketPlugin.getMaxBaseDistance() (double)
+					 * movement = GetRandom(StockMarketPlugin.getRandomMovementMin(),
+					 * StockMarketPlugin.getRandomMovementMin()) GetRandom( 1 + price_dif /
+					 * StockMarketPlugin.getMinBaseDistance() (double) share.get("current_change"),
+					 * 1 - price_dif / StockMarketPlugin.getMaxBaseDistance() (double)
 					 * share.get("current_change"));
 					 */
-					movement = GetRandom(StockMarketPlugin.getRandomMovementMin(),
-							StockMarketPlugin.getRandomMovementMax())
-							* GetRandom(
-									(double) share.get("current_change")
-											- price_dif / StockMarketPlugin.getMaxBaseDistance()
-													* (double) share.get("current_change"),
-									(double) share.get("current_change")
-											+ price_dif / StockMarketPlugin.getMinBaseDistance()
-													* (double) share.get("current_change"));
+					movement = GetRandom(
+							-(double) share.get("current_change")
+									- price_dif / (double) StockMarketPlugin.getMaxBaseDistance(),
+							(double) share.get("current_change")
+									- price_dif / (double) StockMarketPlugin.getMaxBaseDistance());
 
 					if (movement_duration < 60 * 1000 * 60) {
 						movement = movement / ((double) 60 / movement_duration);
@@ -88,17 +83,8 @@ public class StockMarketThread implements Runnable {
 					share.put("movement_duration", movement_duration);
 					share.put("movement_end", movement_end);
 
-					plugin.getLogger()
-							.info("New movement for " + shares.keySet().toArray()[i] + ": " + movement + " for "
-									+ (movement_duration / 1000 / 60) + " minutes. (possible: min="
-									+ (StockMarketPlugin.getRandomMovementMin() * ((double) share.get("current_change")
-											+ price_dif / StockMarketPlugin.getMinBaseDistance()
-													* (double) share.get("current_change")))
-									+ "; max="
-									+ (StockMarketPlugin.getRandomMovementMax() * ((double) share.get("current_change")
-											+ price_dif / StockMarketPlugin.getMinBaseDistance()
-													* (double) share.get("current_change")))
-									+ ")");
+					plugin.getLogger().info("New movement for " + shares.keySet().toArray()[i] + ": " + movement
+							+ " for " + (movement_duration / 1000 / 60) + " minutes.");
 				}
 
 				// share.put("price", (double) share.get("price") + (movement /

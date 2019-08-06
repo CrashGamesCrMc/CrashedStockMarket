@@ -1,5 +1,7 @@
 package io.github.crashgamescrmc.StockMarket;
 
+import java.util.Random;
+
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,8 +11,11 @@ import org.json.simple.JSONObject;
 
 public class StockMarketCommandExecutor implements CommandExecutor {
 
+	public StockMarketPlugin plugin;
+
 	public StockMarketCommandExecutor(StockMarketPlugin plugin) {
 		plugin.getCommand("sm").setExecutor(this);
+		this.plugin = plugin;
 	}
 
 	public static String PermissionDenied(String[] permissions) {
@@ -84,6 +89,14 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 			"StockMarket.config.share.*", "StockMarket.config.share.show" };
 	public static final String[] permission_reload = new String[] { "StockMarket.*", "StockMarket.reload" };
 	public static final String[] permission_version = new String[] { "StockMarket.version", "StockMarket.*" };
+	public static final String[] permission_forcemovements = new String[] { "StockMarket.forcemovements",
+			"StockMarket.*" };
+	public static final String[] permission_thread_stop = new String[] { "StockMarket.*", "StockMarket.thread.*",
+			"StockMarket.thread.stop" };
+	public static final String[] permission_thread_start = new String[] { "StockMarket.*", "StockMarket.thread.*",
+			"StockMarket.thread.start" };
+	public static final String[] permission_thread_restart = new String[] { "StockMarket.thread.restart",
+			"StockMarket.thread.*", "StockMarket.*" };
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
@@ -165,7 +178,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 
 								if (args.length == 4) {
 									sender.sendMessage(
-											prefix + "name of " + args[3] + " is " + (String) share.get("name"));
+											prefix + "name of " + args[3] + " is " + (double) share.get("name"));
 									return true;
 								}
 								share.put("name", args[4]);
@@ -188,7 +201,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 
 								if (args.length == 4) {
 									sender.sendMessage(
-											prefix + "base of " + args[3] + " is " + (String) share.get("base"));
+											prefix + "base of " + args[3] + " is " + (double) share.get("base"));
 									return true;
 								}
 								share.put("base", args[4]);
@@ -234,7 +247,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 
 								if (args.length == 4) {
 									sender.sendMessage(
-											prefix + "change of " + args[3] + " is " + (String) share.get("change"));
+											prefix + "change of " + args[3] + " is " + (double) share.get("change"));
 									return true;
 								}
 								share.put("change", args[4]);
@@ -257,7 +270,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 
 								if (args.length == 4) {
 									sender.sendMessage(prefix + "current change of " + args[3] + " is "
-											+ (String) share.get("current_change"));
+											+ (double) share.get("current_change"));
 									return true;
 								}
 								share.put("current_change", args[4]);
@@ -297,16 +310,16 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 					JSONObject share;
 					for (int i = 0; i < shares.size(); i++) {
 						share = (JSONObject) shares.values().toArray()[i];
-						sender.sendMessage(prefix + "" + share.get("name") + " (" + shares.keySet().toArray()[i]
-								+ ") - Price: " + share.get("price"));
+						sender.sendMessage(prefix + "§e" + share.get("name") + " (" + shares.keySet().toArray()[i]
+								+ ")§f - Price: " + share.get("price"));
 					}
 					sender.sendMessage(prefix + "========== Currencies ==========\n");
 					JSONObject currencies = StockMarketPlugin.getCurrencies();
 					JSONObject currency;
 					for (int i = 0; i < currencies.size(); i++) {
 						currency = (JSONObject) currencies.values().toArray()[i];
-						sender.sendMessage(prefix + "" + currency.get("name") + " (" + currencies.keySet().toArray()[i]
-								+ ") - Price: " + currency.get("price"));
+						sender.sendMessage(prefix + "§a" + currency.get("name") + " ("
+								+ currencies.keySet().toArray()[i] + ")§f - Price: " + currency.get("price"));
 					}
 				} else if (args[0].equalsIgnoreCase("add")) {
 					if (args.length < 2) {
@@ -514,11 +527,54 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 						return true;
 					}
 					StockMarketPlugin.parseConfig();
-					StockMarketThread.state = StockMarketThread.RESTART;
+					plugin.stockMarketThread.state = StockMarketThread.STOP;
+					plugin.stockMarketThread = new StockMarketThread(plugin, new Random());
+					new Thread(plugin.stockMarketThread);
+
 					sender.sendMessage(prefix + "Reloaded Stock Market!");
 				} else if (args[0].equalsIgnoreCase("version")) {
 					if (!hasPermission(sender, permission_version)) {
-
+						sender.sendMessage(PermissionDenied(permission_version));
+						return false;
+					}
+					sender.sendMessage("Running Stock Market v" + StockMarketPlugin.version + " (build "
+							+ StockMarketPlugin.build + ") developed by CrashGamesCrMc (aka Beybalde007SF).");
+				} else if (args[0].equalsIgnoreCase("forcemovements")) {
+					if (!hasPermission(sender, permission_forcemovements)) {
+						sender.sendMessage(PermissionDenied(permission_forcemovements));
+						return true;
+					}
+					JSONObject shares = StockMarketPlugin.getShares();
+					for (int i = 0; i < shares.size(); i++) {
+						((JSONObject) shares.values().toArray()[i]).put("movement_end", 0L);
+						sender.sendMessage(prefix + "§4Reset movement for §e" + shares.keySet().toArray()[i] + "§f!");
+					}
+					sender.sendMessage(prefix + "Reset movement of all shares!");
+				} else if (args[0].equalsIgnoreCase("thread")) {
+					if (args[1].equalsIgnoreCase("stop")) {
+						if (!hasPermission(sender, permission_thread_stop)) {
+							sender.sendMessage(PermissionDenied(permission_thread_stop));
+							return true;
+						}
+						plugin.stockMarketThread.state = StockMarketThread.STOP;
+						sender.sendMessage(prefix + "§4Stop signal has been sent!");
+					} else if (args[1].equalsIgnoreCase("start")) {
+						if (!hasPermission(sender, permission_thread_start)) {
+							sender.sendMessage(PermissionDenied(permission_thread_start));
+							return true;
+						}
+						plugin.stockMarketThread = new StockMarketThread(plugin, new Random());
+						new Thread(plugin.stockMarketThread).start();
+						sender.sendMessage(prefix + "§4Started a new Stock Market thread!");
+					} else if (args[1].equalsIgnoreCase("restart")) {
+						if (!hasPermission(sender, permission_thread_restart)) {
+							sender.sendMessage(PermissionDenied(permission_thread_restart));
+							return true;
+						}
+						plugin.stockMarketThread.state = StockMarketThread.STOP;
+						plugin.stockMarketThread = new StockMarketThread(plugin, new Random());
+						new Thread(plugin.stockMarketThread).start();
+						sender.sendMessage(prefix + "§4Stop signal sent and new thread started!");
 					}
 				} else {
 					sender.sendMessage(error_subcommand_not_found);
@@ -551,10 +607,10 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 				if (hasPermission(sender, permission_sell)) {
 					sender.sendMessage(prefix + "/sm sell -> shows help for subcommands");
 				}
-				if (!hasPermission(sender, permission_reload)) {
+				if (hasPermission(sender, permission_reload)) {
 					sender.sendMessage(prefix + "/sm reload -> reloads the plugins config file");
 				}
-				if (!hasPermission(sender, permission_version)) {
+				if (hasPermission(sender, permission_version)) {
 					sender.sendMessage(prefix + "/sm version -> shows the plugin's version");
 				}
 			}
