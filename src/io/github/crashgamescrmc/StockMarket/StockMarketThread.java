@@ -63,10 +63,12 @@ public class StockMarketThread implements Runnable {
 					movement_end = (long) (System.currentTimeMillis() + movement_duration);
 
 					/*
-					 * movement = GetRandom(StockMarketPlugin.getRandomMovementMin(),
-					 * StockMarketPlugin.getRandomMovementMin()) GetRandom( 1 + price_dif /
-					 * StockMarketPlugin.getMinBaseDistance() (double) share.get("current_change"),
-					 * 1 - price_dif / StockMarketPlugin.getMaxBaseDistance() (double)
+					 * movement =
+					 * GetRandom(StockMarketPlugin.getRandomMovementMin(),
+					 * StockMarketPlugin.getRandomMovementMin()) GetRandom( 1 +
+					 * price_dif / StockMarketPlugin.getMinBaseDistance()
+					 * (double) share.get("current_change"), 1 - price_dif /
+					 * StockMarketPlugin.getMaxBaseDistance() (double)
 					 * share.get("current_change"));
 					 */
 					movement = GetRandom(
@@ -83,8 +85,10 @@ public class StockMarketThread implements Runnable {
 					share.put("movement_duration", movement_duration);
 					share.put("movement_end", movement_end);
 
-					plugin.getLogger().info("New movement for " + shares.keySet().toArray()[i] + ": " + movement
-							+ " for " + (movement_duration / 1000 / 60) + " minutes.");
+					if (StockMarketPlugin.isDebug()) {
+						plugin.getLogger().info("New movement for " + shares.keySet().toArray()[i] + ": " + movement
+								+ " for " + (movement_duration / 1000 / 60) + " minutes.");
+					}
 				}
 
 				// share.put("price", (double) share.get("price") + (movement /
@@ -93,14 +97,19 @@ public class StockMarketThread implements Runnable {
 						+ (movement / (movement_duration / 60000)) * (double) share.get("price"));
 
 				if ((double) share.get("price") < (double) share.get("base") * StockMarketPlugin.getBankruptcy()) {
-					Bukkit.broadcastMessage(StockMarketCommandExecutor.prefix + (String) shares.keySet().toArray()[i]
-							+ " has gone bankrupt! The shares are now redistributed.");
+					if (StockMarketPlugin.isDebug()) {
+						Bukkit.broadcastMessage(
+								StockMarketCommandExecutor.prefix + (String) shares.keySet().toArray()[i]
+										+ " has gone bankrupt! The shares are now redistributed.");
+					}
 					share.put("current_base", share.get("base"));
 					share.put("current_change", share.get("change"));
 					share.put("price", share.get("base"));
 				}
-				plugin.getLogger().info(
-						"Movement: " + movement + " - total movement; now: " + movement / (movement_duration / 60000));
+				if (StockMarketPlugin.isDebug()) {
+					plugin.getLogger().info("Movement: " + movement + " - total movement; now: "
+							+ movement / (movement_duration / 60000));
+				}
 			}
 			end = System.currentTimeMillis();
 
@@ -108,9 +117,13 @@ public class StockMarketThread implements Runnable {
 
 			try {
 				Thread.sleep(60 * 1000 - (end - start));
-				plugin.getLogger().info("[Stock Market][Event Thread]: Waiting " + (60 * 1000 - (end - start)) + "ms!");
+				if (StockMarketPlugin.isDebug()) {
+					plugin.getLogger()
+							.info("[Stock Market][Event Thread]: Waiting " + (60 * 1000 - (end - start)) + "ms!");
+				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				plugin.getLogger().info("Detected shutdown! Waiting loop interupted.");
+				break;
 			}
 		}
 	}
