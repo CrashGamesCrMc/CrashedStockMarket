@@ -59,7 +59,7 @@ public class StockMarketPlugin extends JavaPlugin {
 															// (10*change+base)
 				settings.put("bankruptcy_from_base", 0.5);
 				settings.put("round", 4);
-				settings.put("debug", 1L);
+				settings.put("debug", 0L);
 
 				master.put("settings", settings);
 
@@ -172,7 +172,7 @@ public class StockMarketPlugin extends JavaPlugin {
 			}
 			if (Utils.isSmaller(getConfigVersion(), getConfigBuild(), "0.4.1", 1)) {
 				getLogger().info("§e§lAdapting config from prior to 0.4.1!");
-				settings.put(", value)
+				settings.put("debug", 0L);
 			}
 
 			getSettings().put("version", version);
@@ -354,6 +354,10 @@ public class StockMarketPlugin extends JavaPlugin {
 
 	public static double getBankruptcy() {
 		return (double) getSettings().get("bankruptcy_from_base");
+	}
+
+	public static boolean isDebug() {
+		return (long) getSettings().get("debug") == 1;
 	}
 
 	@SuppressWarnings("unchecked")
