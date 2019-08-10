@@ -372,9 +372,9 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 								try {
 									amount = Integer.parseInt(args[3]);
 								} catch (NumberFormatException e) {
-									sender.sendMessage(prefix
-											+ "§4Error while executing command! The given amount was not a number. Exception: "
-											+ e.getMessage());
+									sender.sendMessage(
+											prefix + "§4Error while executing command! The given amount was not a number. Exception: "
+													+ e.getMessage());
 									return true;
 								}
 							}
@@ -538,7 +538,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 						return false;
 					}
 					sender.sendMessage("Running Stock Market v" + StockMarketPlugin.version + " (build "
-							+ StockMarketPlugin.build + ") developed by CrashGamesCrMc (aka Beybalde007SF).");
+							+ StockMarketPlugin.build + ") developed by CrashGamesCrMc (aka Beyblade007SF).");
 				} else if (args[0].equalsIgnoreCase("forcemovements")) {
 					if (!hasPermission(sender, permission_forcemovements)) {
 						sender.sendMessage(PermissionDenied(permission_forcemovements));

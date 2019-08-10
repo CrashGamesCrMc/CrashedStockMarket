@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -25,7 +24,7 @@ public class StockMarketPlugin extends JavaPlugin {
 	public static final String config_file_path = "plugins/StockMarket/config.json";
 	public static final String config_dir = "plugins/StockMarket";
 
-	public static final String version = "0.4.0";
+	public static final String version = "0.4.1";
 	public static final long build = 1;
 
 	public StockMarketThread stockMarketThread;
@@ -60,6 +59,7 @@ public class StockMarketPlugin extends JavaPlugin {
 															// (10*change+base)
 				settings.put("bankruptcy_from_base", 0.5);
 				settings.put("round", 4);
+				settings.put("debug", 1L);
 
 				master.put("settings", settings);
 
@@ -69,9 +69,10 @@ public class StockMarketPlugin extends JavaPlugin {
 
 				/*
 				 * JSONObject Apple = new JSONObject(); Apple.put("name",
-				 * "Apple Computer Inc."); Apple.put("base", 165.0); Apple.put("change", 0.03);
-				 * Apple.put("current_base", 165.0); Apple.put("current_change", 0.03);
-				 * Apple.put("price", Apple.get("base")); Apple.put("event_chance", 0.05);
+				 * "Apple Computer Inc."); Apple.put("base", 165.0);
+				 * Apple.put("change", 0.03); Apple.put("current_base", 165.0);
+				 * Apple.put("current_change", 0.03); Apple.put("price",
+				 * Apple.get("base")); Apple.put("event_chance", 0.05);
 				 * Apple.put("movement",0.0); Apple.put("movement_end", 0L);
 				 * Apple.put("movement_duration", 0L);
 				 * 
@@ -168,6 +169,10 @@ public class StockMarketPlugin extends JavaPlugin {
 			if (Utils.isSmaller(getConfigVersion(), getConfigBuild(), "0.3.4", 1)) {
 				getLogger().info("§e§lAdapting config from prior to 0.3.4!");
 				settings.put("rounding", 4);
+			}
+			if (Utils.isSmaller(getConfigVersion(), getConfigBuild(), "0.4.1", 1)) {
+				getLogger().info("§e§lAdapting config from prior to 0.4.1!");
+				settings.put(", value)
 			}
 
 			getSettings().put("version", version);
