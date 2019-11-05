@@ -4,5 +4,6 @@
 	<classpathentry kind="lib" path="C:/javaLib/spigot/spigot-1.14.2.jar"/>
 	<classpathentry kind="lib" path="C:/javaLib/spigot/Vault.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/javaLib/SimpleDB/SimpleDBMT-2.0.0.jar" sourcepath="/SimpleDBMT"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

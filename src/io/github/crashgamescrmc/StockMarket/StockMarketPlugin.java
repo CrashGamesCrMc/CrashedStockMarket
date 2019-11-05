@@ -14,6 +14,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import io.github.SebastianDanielFrenz.SimpleDBMT.DataBase;
+import io.github.SebastianDanielFrenz.SimpleDBMT.DataBaseHandler;
 import net.milkbowl.vault.economy.Economy;
 
 public class StockMarketPlugin extends JavaPlugin {
@@ -26,6 +28,8 @@ public class StockMarketPlugin extends JavaPlugin {
 
 	public static final String version = "0.4.1";
 	public static final long build = 1;
+	public static DataBaseHandler dbh;
+	public static DataBase db;
 
 	public StockMarketThread stockMarketThread;
 
@@ -193,6 +197,7 @@ public class StockMarketPlugin extends JavaPlugin {
 		getLogger().info("Enabled StockMarket!");
 
 		saveConfigFile();
+
 	}
 
 	public void onDisable() {
@@ -407,6 +412,14 @@ public class StockMarketPlugin extends JavaPlugin {
 
 	public static JSONObject getShare(String share) {
 		return (JSONObject) getShares().get(share);
+	}
+
+	public void loadConfiguration() {
+		getConfig().addDefault(path, value);
+		
+		getConfig().options().copyDefaults(true);
+
+		saveConfig();
 	}
 
 }
