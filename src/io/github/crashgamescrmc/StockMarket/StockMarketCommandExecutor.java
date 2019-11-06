@@ -50,6 +50,7 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 	public static final String error_invalid_good = prefix + "§4Invalid type of good!";
 	public static final String error_not_enough_shares = prefix + "§4Not enough shares!";
 	public static final String error_subcommand_not_found = prefix + "§4Subcommand not found!";
+	public static final String error_format_exception = prefix + "§4Format Exception!";
 
 	public static final String[] permission_config = new String[] { "StockMarket.config", "StockMarket.*" };
 	public static final String[] permission_buy = new String[] { "StockMarket.buy", "StockMarket.member",
@@ -97,6 +98,8 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 			"StockMarket.thread.start" };
 	public static final String[] permission_thread_restart = new String[] { "StockMarket.thread.restart",
 			"StockMarket.thread.*", "StockMarket.*" };
+	public static final String[] permission_config_debug = new String[] { "StockMarket.*", "StockMarket.config.*",
+			"StockMarket.config.debug" };
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
@@ -134,6 +137,23 @@ public class StockMarketCommandExecutor implements CommandExecutor {
 									+ "/sm config share current_change <ID> [<new_current_change>] -> sets the share's current change value");
 							sender.sendMessage(
 									prefix + "/sm config share show <ID> -> shows the config value for the share");
+						} else if (args[1].equalsIgnoreCase("debug")) {
+							if (!hasPermission(sender, permission_config_debug)) {
+								sender.sendMessage(PermissionDenied(permission_config_debug));
+								return true;
+							}
+							if (args.length < 3) {
+								sender.sendMessage(error_not_enough_arguments);
+								return true;
+							}
+							try {
+								boolean debug = Boolean.parseBoolean(args[2]);
+								StockMarketPlugin.setDebug(debug);
+								sender.sendMessage(prefix + "Set debug to " + debug + "!");
+							} catch (Exception e) {
+								sender.sendMessage(error_format_exception);
+							}
+							return true;
 						} else if (args[1].equalsIgnoreCase("share")) {
 							if (args.length == 2) {
 								sender.sendMessage(error_not_enough_arguments);

@@ -1,5 +1,5 @@
 name: StockMarket
-version: 0.4.1_01
+version: 0.4.1_02
 author: CrashGamesCrMc
 main: io.github.crashgamescrmc.StockMarket.StockMarketPlugin
 description: A minecraft plugin that adds a stock market.
