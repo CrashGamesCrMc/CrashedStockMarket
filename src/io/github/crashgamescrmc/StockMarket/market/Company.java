@@ -1,6 +1,6 @@
 package io.github.crashgamescrmc.StockMarket.market;
 
-public class StockMarketCompany {
+public class Company {
 
 	private String name;
 	private double dividend;
