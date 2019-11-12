@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+
 public class OrderBook {
 
 	public OrderBook(Iterable<Share> shares) {

@@ -2,6 +2,9 @@ package io.github.crashgamescrmc.StockMarket.market;
 
 import java.util.Comparator;
 
+import io.github.crashgamescrmc.StockMarket.market.orders.BuyOrder;
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+
 public class ProfitSortingComparor implements Comparator<Order> {
 
 	@Override

@@ -1,4 +1,7 @@
-package io.github.crashgamescrmc.StockMarket.market;
+package io.github.crashgamescrmc.StockMarket.market.orders;
+
+import io.github.crashgamescrmc.StockMarket.market.Share;
+import io.github.crashgamescrmc.StockMarket.market.StockMarket;
 
 public class BuyOrderCheapest extends BuyOrder {
 

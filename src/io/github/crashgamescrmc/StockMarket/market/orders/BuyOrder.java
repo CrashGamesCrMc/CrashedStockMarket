@@ -1,4 +1,9 @@
-package io.github.crashgamescrmc.StockMarket.market;
+package io.github.crashgamescrmc.StockMarket.market.orders;
+
+import io.github.crashgamescrmc.StockMarket.market.NotEnoughMoneyException;
+import io.github.crashgamescrmc.StockMarket.market.Share;
+import io.github.crashgamescrmc.StockMarket.market.ShareStack;
+import io.github.crashgamescrmc.StockMarket.market.StockMarket;
 
 public abstract class BuyOrder extends Order {
 

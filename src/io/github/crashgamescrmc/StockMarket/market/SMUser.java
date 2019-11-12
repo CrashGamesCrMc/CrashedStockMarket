@@ -3,6 +3,8 @@ package io.github.crashgamescrmc.StockMarket.market;
 import java.util.List;
 import java.util.Map;
 
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+
 public abstract class SMUser {
 
 	private String name;

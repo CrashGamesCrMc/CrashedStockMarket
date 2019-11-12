@@ -3,6 +3,8 @@ package io.github.crashgamescrmc.StockMarket.market;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+
 public class StockMarket {
 
 	private Map<String, ShareStack> market_shares = new HashMap<String, ShareStack>();

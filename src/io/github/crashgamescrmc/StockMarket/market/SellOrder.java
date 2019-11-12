@@ -1,5 +1,7 @@
 package io.github.crashgamescrmc.StockMarket.market;
 
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+
 public abstract class SellOrder extends Order {
 
 	public SellOrder(Share share, int amount) {
