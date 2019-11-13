@@ -2,13 +2,15 @@ package io.github.crashgamescrmc.StockMarket.market;
 
 public class QueueObject<T> {
 
-	public QueueObject(T value, QueueObject<T> next) {
+	public QueueObject(T value, QueueObject<T> next, QueueObject<T> prev) {
 		setValue(value);
 		setNext(next);
+		setPrev(prev);
 	}
 
 	private T value;
 	private QueueObject<T> next;
+	private QueueObject<T> prev;
 
 	public T getValue() {
 		return value;
@@ -24,5 +26,13 @@ public class QueueObject<T> {
 
 	public void setNext(QueueObject<T> next) {
 		this.next = next;
+	}
+
+	public QueueObject<T> getPrev() {
+		return prev;
+	}
+
+	public void setPrev(QueueObject<T> prev) {
+		this.prev = prev;
 	}
 }

@@ -5,6 +5,14 @@ import java.util.Iterator;
 import io.github.crashgamescrmc.StockMarket.exceptions.IndexOutOfQueueException;
 import io.github.crashgamescrmc.StockMarket.exceptions.QueueEmptyException;
 
+/**
+ * New values are inserted as the first element(s) for ease of use while
+ * scanning through the last x prices.
+ * 
+ * @author crash
+ *
+ * @param <T>
+ */
 public class CustomQueue<T> implements Iterable<T> {
 
 	private QueueObject<T> first;
@@ -12,24 +20,26 @@ public class CustomQueue<T> implements Iterable<T> {
 	private int size;
 
 	public void enqueue(T value) {
+		QueueObject<T> obj = new QueueObject<T>(value, first, null);
+		if (first != null) {
+			first.setPrev(obj);
+		}
+		first = obj;
 		if (last == null) {
-			last = new QueueObject<T>(value, null);
-			first = last;
-		} else {
-			last.setNext(new QueueObject<T>(value, null));
+			last = first;
 		}
 		size++;
 	}
 
 	public void dequeue() {
-		if (first == null) {
+		if (last == null) {
 			throw new QueueEmptyException();
-		} else {
-			first = first.getNext();
-			if (first == null) {
-				last = null;
-			}
 		}
+		last = last.getPrev();
+		if (last == null) {
+			first = null;
+		}
+
 		size--;
 	}
 
@@ -65,10 +75,10 @@ public class CustomQueue<T> implements Iterable<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-		return new CustomQueueIterator<>(first);
+		return new CustomQueueIterator<T>(first);
 	}
 
-	public double size() {
+	public int size() {
 		return size;
 	}
 

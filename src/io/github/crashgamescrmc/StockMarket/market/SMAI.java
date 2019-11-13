@@ -1,7 +1,5 @@
 package io.github.crashgamescrmc.StockMarket.market;
 
-import sun.misc.Queue;
-
 public class SMAI extends SMUser {
 
 	public SMAI(double stop_loss, double stop_gain, double balance) {
@@ -18,7 +16,6 @@ public class SMAI extends SMUser {
 
 	private double place_buy_limit = 1.03; // place order limit 3% above the
 											// choosen price
-	private CustomQueue<Double> observed = new CustomQueue<Double>();
 
 	private double balance;
 
@@ -72,19 +69,7 @@ public class SMAI extends SMUser {
 	public void play(StockMarket market) {
 		for (ShareStack shareStack : market.getMarket_shares().values()) {
 			double price = shareStack.getPrice();
-			if (observed.size() == observing_time) {
-				observed.dequeue();
-			}
-			observed.enqueue(price);
-			double total = 0;
-			for (double subprice : observed) {
-				total += subprice;
-			}
-			double avg_price = total / observing_time;
-
-			if (avg_price * start_buy_low >= price) {
-				getOrders().add(new BuyOrder)
-			}
+			double 
 		}
 	}
 
@@ -94,14 +79,6 @@ public class SMAI extends SMUser {
 
 	public void setObserving_time(double observing_time) {
 		this.observing_time = observing_time;
-	}
-
-	public CustomQueue<Double> getObserved() {
-		return observed;
-	}
-
-	public void setObserved(CustomQueue<Double> observed) {
-		this.observed = observed;
 	}
 
 }
