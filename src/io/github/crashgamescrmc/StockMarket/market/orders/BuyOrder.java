@@ -13,7 +13,7 @@ public abstract class BuyOrder extends Order {
 
 	@Override
 	public Order execute(double price, int amount, StockMarket market) {
-		ShareStack share = market.getMarket_shares().get(getShare().getName());
+		ShareStack share = market.getShares().get(getShare().getName());
 		int real_amount = getExecutionAmount(price, amount);
 
 		if (user.has(price * amount)) {

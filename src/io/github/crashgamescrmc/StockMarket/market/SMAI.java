@@ -67,9 +67,10 @@ public class SMAI extends SMUser {
 	}
 
 	public void play(StockMarket market) {
-		for (ShareStack shareStack : market.getMarket_shares().values()) {
+		// buying
+
+		for (ShareStack shareStack : market.getShares().values()) {
 			double price = shareStack.getPrice();
-			double 
 		}
 	}
 

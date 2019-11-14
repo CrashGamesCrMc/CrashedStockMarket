@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+import io.github.crashgamescrmc.StockMarket.market.orders.SellOrder;
 
 public class OrderBook {
 

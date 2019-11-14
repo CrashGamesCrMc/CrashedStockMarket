@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import io.github.crashgamescrmc.StockMarket.market.orders.BuyOrder;
 import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+import io.github.crashgamescrmc.StockMarket.market.orders.SellOrder;
 
 public class ProfitSortingComparor implements Comparator<Order> {
 

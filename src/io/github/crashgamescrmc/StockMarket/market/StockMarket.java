@@ -1,22 +1,15 @@
 package io.github.crashgamescrmc.StockMarket.market;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.github.crashgamescrmc.StockMarket.StockMarketPlugin;
 import io.github.crashgamescrmc.StockMarket.market.orders.Order;
 
-public class StockMarket {
+public class StockMarket extends SMUser {
 
-	private Map<String, ShareStack> market_shares = new HashMap<String, ShareStack>();
+	public StockMarket(OrderBook orderBook) {
+		setOrderBook(orderBook);
+	}
+
 	private OrderBook orderBook;
-
-	public Map<String, ShareStack> getMarket_shares() {
-		return market_shares;
-	}
-
-	public void setMarket_shares(Map<String, ShareStack> market_shares) {
-		this.market_shares = market_shares;
-	}
 
 	public OrderBook getOrderBook() {
 		return orderBook;
@@ -29,7 +22,8 @@ public class StockMarket {
 	public void update() {
 		double price;
 		int amount;
-		for (ShareStack share : market_shares.values()) {
+
+		for (ShareStack share : getShares().values()) {
 			amount = share.getAmount();
 			price = orderBook.getPriceForMaximumProfit(share.getType(), amount);
 
@@ -41,6 +35,25 @@ public class StockMarket {
 			share.setAmount(amount);
 
 		}
+	}
+
+	@Override
+	public boolean has(double money) {
+		return true;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void withdraw(double money) {
+		StockMarketPlugin.economy
+				.withdrawPlayer(StockMarketPlugin.plugin.getConfig().getString(StockMarketPlugin.cBANK_NAME), money);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void deposit(double money) {
+		StockMarketPlugin.economy
+				.depositPlayer(StockMarketPlugin.plugin.getConfig().getString(StockMarketPlugin.cBANK_NAME), money);
 	}
 
 }

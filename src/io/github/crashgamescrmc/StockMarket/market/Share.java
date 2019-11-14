@@ -104,11 +104,11 @@ public class Share {
 
 	public double getAmplitude(int duration, int count, int gausCutoff) {
 		if (last_prices.size() == 1) {
-			return new double[] { price };
+			return price;
 		} else if (duration > last_prices.size()) {
-			return getAmplitude(last_prices.size(), count);
+			return getAmplitude(last_prices.size(), count, gausCutoff);
 		} else if (count * 2 > last_prices.size()) {
-			return getAmplitude(duration, last_prices.size() / 2);
+			return getAmplitude(duration, last_prices.size() / 2, gausCutoff);
 		} else {
 			List<Double> prices = getLastPricesAsList(duration);
 			prices.sort(new DoubleComparator());
@@ -119,6 +119,7 @@ public class Share {
 				total_high += prices.get(prices.size() - 1 - i);
 				total_low += prices.get(i);
 			}
+			return (total_high - total_low) / baseline / 2;
 		}
 	}
 

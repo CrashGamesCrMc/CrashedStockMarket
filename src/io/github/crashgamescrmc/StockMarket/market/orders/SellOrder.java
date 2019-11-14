@@ -1,6 +1,9 @@
-package io.github.crashgamescrmc.StockMarket.market;
+package io.github.crashgamescrmc.StockMarket.market.orders;
 
-import io.github.crashgamescrmc.StockMarket.market.orders.Order;
+import io.github.crashgamescrmc.StockMarket.market.NotEnoughMoneyException;
+import io.github.crashgamescrmc.StockMarket.market.Share;
+import io.github.crashgamescrmc.StockMarket.market.ShareStack;
+import io.github.crashgamescrmc.StockMarket.market.StockMarket;
 
 public abstract class SellOrder extends Order {
 
@@ -10,7 +13,7 @@ public abstract class SellOrder extends Order {
 
 	@Override
 	public Order execute(double price, int amount, StockMarket market) {
-		ShareStack share = market.getMarket_shares().get(getShare().getName());
+		ShareStack share = market.getShares().get(getShare().getName());
 		int real_amount = getExecutionAmount(price, amount);
 
 		if (user.hasShares(share.getType(), real_amount)) {

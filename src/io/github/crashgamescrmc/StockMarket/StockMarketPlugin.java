@@ -415,11 +415,13 @@ public class StockMarketPlugin extends JavaPlugin {
 	}
 
 	public void loadConfiguration() {
-		getConfig().addDefault(path, value);
-		
+		getConfig().addDefault(cBANK_NAME, "Bank");
+
 		getConfig().options().copyDefaults(true);
 
 		saveConfig();
 	}
+
+	public static final String cBANK_NAME = "bank.name";
 
 }
