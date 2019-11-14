@@ -1,10 +1,19 @@
 package io.github.crashgamescrmc.StockMarket.market;
 
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.OfflinePlayer;
 
 import io.github.crashgamescrmc.StockMarket.StockMarketPlugin;
+import io.github.crashgamescrmc.StockMarket.market.orders.Order;
 
 public class SMPlayer extends SMUser {
+
+	public SMPlayer(OfflinePlayer player, Map<String, ShareStack> shares, List<Order> orders) {
+		super(player.getName(), shares, orders);
+		this.player = player;
+	}
 
 	private OfflinePlayer player;
 

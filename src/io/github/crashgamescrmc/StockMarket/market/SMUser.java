@@ -7,6 +7,12 @@ import io.github.crashgamescrmc.StockMarket.market.orders.Order;
 
 public abstract class SMUser {
 
+	public SMUser(String name, Map<String, ShareStack> shares, List<Order> orders) {
+		this.name = name;
+		this.shares = shares;
+		this.orders = orders;
+	}
+
 	private String name;
 
 	private Map<String, ShareStack> shares;
@@ -19,14 +25,25 @@ public abstract class SMUser {
 	public abstract void deposit(double money);
 
 	public void giveShares(ShareStack shareStack) {
-		shares.get(shareStack.getType().getName()).merge(shareStack);
+		// TODO DB update
+
+		ShareStack stack = shares.get(shareStack.getType().getName());
+		if (stack == null) {
+			shares.put(shareStack.getType().getName(), shareStack);
+		} else {
+			stack.merge(shareStack);
+		}
 	}
 
 	public void giveShares(Share share, int amount) {
+		// TODO DB update
+
 		shares.get(share.getName()).add(amount);
 	}
 
 	public void removeShares(Share share, int amount) {
+		// TODO DB update
+
 		shares.get(share.getName()).remove(amount);
 	}
 

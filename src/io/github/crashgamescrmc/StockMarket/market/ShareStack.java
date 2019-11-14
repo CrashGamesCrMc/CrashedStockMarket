@@ -43,6 +43,9 @@ public class ShareStack {
 	}
 
 	public void merge(ShareStack shareStack) {
+		if (shareStack == null) {
+			return;
+		}
 		if (type == shareStack.type) {
 			price_when_bought = (price_when_bought * amount + shareStack.price_when_bought * shareStack.amount)
 					/ (amount + shareStack.amount);
